@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 app.use(express.json())
 
@@ -26,6 +27,15 @@ let persons = [
     "number": "39-23-6423122"
   }
 ]
+
+morgan.token('body', req => {
+  return JSON.stringify(req.body)
+})
+
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :url :body',
+    { skip: (req, res) => { return req.method !== 'POST' } }
+  ))
 
 app.get('/', (request, response) => {
   const date = new Date()
@@ -73,7 +83,7 @@ app.post('/api/persons', (request, response) => {
   // validation
   const exists = persons.find(p => p.name === body.name)
 
-  if(exists) {
+  if (exists) {
     return response.status(403).json({
       error: 'name must be unique'
     })
