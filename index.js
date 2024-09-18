@@ -6,6 +6,7 @@ const cors = require('cors')
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('dist'))
 
 let persons = [
   {
@@ -36,7 +37,7 @@ morgan.token('body', req => {
 
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :url :body',
-    { skip: (req, res) => { return req.method !== 'POST' } }
+    { } //skip: (req, res) => { return req.method !== 'POST' } }
   ))
 
 app.get('/', (request, response) => {
@@ -63,11 +64,12 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  const delPerson = persons.find(p => p.id === id)
+  const delPerson = persons.find(p => p.id == id)
+  console.log(delPerson)
   if (delPerson) {
     persons = persons.filter(p => p.id !== id)
     response.status(204).end()
-    response.json(person)
+    response.json(delPerson)
   } else {
     response.status(404).end()
   }
