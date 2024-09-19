@@ -37,7 +37,7 @@ morgan.token('body', req => {
 
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :url :body',
-    { } //skip: (req, res) => { return req.method !== 'POST' } }
+    { skip: (req, res) => { return req.method !== 'POST' } }
   ))
 
 app.get('/', (request, response) => {
