@@ -21,11 +21,6 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (newName === '') {
-      alert('Name is empty.')
-      return
-    }
-
     const exists = persons.find(({ name }) => name === newName);
 
     if (exists) {
@@ -44,13 +39,15 @@ const App = () => {
           }
           )
           .catch(error => {
-            setErrorMessage(`Update failed`)
+            console.log(error.response.data.error)
+            setErrorMessage(error.response.data.error)
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000)
           })
       }
     } else {
+      console.log('Lisätään uusi')
       const personObject = {
         name: newName,
         number: newNumber
@@ -67,7 +64,8 @@ const App = () => {
           }, 5000)
         })
         .catch(error => {
-          setErrorMessage(`Adding '${response.data.name}' failed`)
+          console.log(error.response.data.error)
+          setErrorMessage(error.response.data.error)
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
